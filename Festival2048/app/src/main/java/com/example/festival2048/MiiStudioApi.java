@@ -22,6 +22,12 @@ public class MiiStudioApi {
         this.miiCode = TESTCODE;
     }
 
+    /**
+     * extracts bytes from a Switch-format Mii in MiiStudioMiiLoader text format
+     * https://github.com/HEYimHeroic/MiiStudioMiiLoader
+     * @param code MSML code
+     * @return ArrayList containing Switch-format Mii bytes
+     */
     public ArrayList<Integer> codeToBytes(String code)
     {
         ArrayList<Integer> bytes = new ArrayList<>();
@@ -36,6 +42,11 @@ public class MiiStudioApi {
         return bytes;
     }
 
+    /**
+     * converts Switch-format Mii bytes to a MiiStudio render URL
+     * @param bytes bytes of a Switch-format Mii
+     * @return URL to the Mii render
+     */
     public String bytesToUrl(ArrayList<Integer> bytes)
     {
         String miiData = "";
@@ -59,10 +70,11 @@ public class MiiStudioApi {
                 "&type=face&expression=normal&width=128&bgColor=FFFFFF00&clothesColor=default&cameraXRotate=0&cameraYRotate=0&cameraZRotate=0&characterXRotate=0&characterYRotate=0&characterZRotate=0&lightDirectionMode=none&instanceCount=1&instanceRotationMode=model";
     }
 
-    public String getMiiCode() {
-        return miiCode;
-    }
-
+    /**
+     * returns the URL to the Mii Studio render,
+     * or generates one from the MSML code if it doesn't exist yet
+     * @return URL to the Mii Studio render
+     */
     public String getMiiUrl() {
         if (miiUrl == null)
         {
@@ -79,5 +91,14 @@ public class MiiStudioApi {
             }
         }
         return miiUrl;
+    }
+
+    public String getMiiCode() {
+        return miiCode;
+    }
+
+    public void setMiiCode(String miiCode) {
+        this.miiCode = miiCode;
+        this.miiUrl = null;
     }
 }
