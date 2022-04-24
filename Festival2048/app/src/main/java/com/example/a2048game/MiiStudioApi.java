@@ -1,4 +1,4 @@
-package com.example.festival2048;
+package com.example.a2048game;
 
 import android.util.Log;
 import android.widget.Toast;
@@ -7,6 +7,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Locale;
 
+/**
+ * @author "minenice" Devrin Aiden Tiongson
+ */
 public class MiiStudioApi {
     static final String TESTCODE =
             "080240030803032c040e0308050409020e040a070001000804000a01001e4004000214031304080f06030b05030a";

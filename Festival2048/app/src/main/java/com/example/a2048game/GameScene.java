@@ -12,7 +12,7 @@ public class GameScene extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_scene);
 
-        Intent intent4 = new Intent(GameScene.this, Scores.class);
-        startActivity(intent4);
+//        Intent intent4 = new Intent(GameScene.this, Scores.class);
+//        startActivity(intent4);
     }
 }

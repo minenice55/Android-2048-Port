@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "121880448325",
+    "project_id": "festival2048",
+    "storage_bucket": "festival2048.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:121880448325:android:11788726501c59f6e4c22c",
+        "android_client_info": {
+          "package_name": "com.example.a2048game"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "121880448325-pagbsgatt1vvmo1g384bf4ou6a6igmjf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvtVTbc8NfF-Yz1rWcwr-5p01p7dFkxXU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "121880448325-pagbsgatt1vvmo1g384bf4ou6a6igmjf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:121880448325:android:16517f90e161bad8e4c22c",
+        "android_client_info": {
+          "package_name": "com.example.festival2048"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "121880448325-pagbsgatt1vvmo1g384bf4ou6a6igmjf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvtVTbc8NfF-Yz1rWcwr-5p01p7dFkxXU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "121880448325-pagbsgatt1vvmo1g384bf4ou6a6igmjf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
