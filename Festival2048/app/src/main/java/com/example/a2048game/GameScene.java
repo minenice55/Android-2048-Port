@@ -13,9 +13,10 @@ public class GameScene extends AppCompatActivity implements
         GestureDetector.OnGestureListener {
 
     private GestureDetectorCompat mDetector;
+    private GameGrid grid;
     static final float SWIPE_THRESHOLD = 1000.0f;
 
-    int[] GridCells = {
+    protected int[] GridCells = {
             R.id.GameCell00, R.id.GameCell10, R.id.GameCell20, R.id.GameCell30,
             R.id.GameCell01, R.id.GameCell11, R.id.GameCell21, R.id.GameCell31,
             R.id.GameCell02, R.id.GameCell12, R.id.GameCell22, R.id.GameCell32,
@@ -27,7 +28,9 @@ public class GameScene extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_scene);
         mDetector = new GestureDetectorCompat(this,this);
+        grid = new GameGrid(this);
 
+        grid.attemptRandPopulate(2);
 
 //        Intent intent4 = new Intent(GameScene.this, Scores.class);
 //        startActivity(intent4);
@@ -74,10 +77,14 @@ public class GameScene extends AppCompatActivity implements
             if (vX > SWIPE_THRESHOLD)
             {
                 Log.println(Log.DEBUG, "Flicked", "Right");
+                if (grid.swipeRows(true))
+                    grid.attemptRandPopulate(1);;
             }
             else if (vX < -SWIPE_THRESHOLD)
             {
                 Log.println(Log.DEBUG, "Flicked", "Left");
+                if (grid.swipeRows(false))
+                    grid.attemptRandPopulate(1);
             }
         }
         else
@@ -85,12 +92,20 @@ public class GameScene extends AppCompatActivity implements
             if (vY > SWIPE_THRESHOLD)
             {
                 Log.println(Log.DEBUG, "Flicked", "Down");
+                if (grid.swipeColumns(true))
+                    grid.attemptRandPopulate(1);
             }
             else if (vY < -SWIPE_THRESHOLD)
             {
                 Log.println(Log.DEBUG, "Flicked", "Up");
+                if (grid.swipeColumns(false))
+                    grid.attemptRandPopulate(1);
             }
         }
         return false;
+    }
+
+    public int[] getGridCells() {
+        return GridCells;
     }
 }
