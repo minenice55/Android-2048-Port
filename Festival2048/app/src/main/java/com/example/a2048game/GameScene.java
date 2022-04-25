@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.widget.TextView;
 
 public class GameScene extends AppCompatActivity implements
         GestureDetector.OnGestureListener {
@@ -15,6 +16,9 @@ public class GameScene extends AppCompatActivity implements
     private GestureDetectorCompat mDetector;
     private GameGrid grid;
     static final float SWIPE_THRESHOLD = 1000.0f;
+
+    int score;
+    TextView scoreDisp;
 
     protected int[] GridCells = {
             R.id.GameCell00, R.id.GameCell10, R.id.GameCell20, R.id.GameCell30,
@@ -29,6 +33,9 @@ public class GameScene extends AppCompatActivity implements
         setContentView(R.layout.activity_game_scene);
         mDetector = new GestureDetectorCompat(this,this);
         grid = new GameGrid(this);
+
+        score = 0;
+        scoreDisp = findViewById(R.id.scoreDisp);
 
         grid.attemptRandPopulate(2);
 
@@ -107,5 +114,19 @@ public class GameScene extends AppCompatActivity implements
 
     public int[] getGridCells() {
         return GridCells;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+        this.scoreDisp.setText(Integer.toString(this.score));
+    }
+
+    public void addScore(int score) {
+        this.score += score;
+        this.scoreDisp.setText(Integer.toString(this.score));
     }
 }

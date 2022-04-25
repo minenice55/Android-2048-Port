@@ -122,8 +122,10 @@ public class GameGrid {
                         //if cell empty keep moving, if cell match merge and stop
                         gridValues[x2][y] = 0;
                         gridValues[x2+1][y] += current;
-                        if (current == want)
+                        if (current == want) {
+                            mContext.addScore(gridValues[x2+1][y]);
                             continue;
+                        }
                     }
                 }
             }
@@ -143,8 +145,10 @@ public class GameGrid {
                         //if cell empty keep moving, if cell match merge and stop
                         gridValues[x2][y] = 0;
                         gridValues[x2-1][y] += current;
-                        if (current == want)
+                        if (current == want) {
+                            mContext.addScore(gridValues[x2-1][y]);
                             continue;
+                        }
                     }
                 }
             }
@@ -170,8 +174,10 @@ public class GameGrid {
                         //if cell empty keep moving, if cell match merge and stop
                         gridValues[x][y2] = 0;
                         gridValues[x][y2+1] += current;
-                        if (current == want)
+                        if (current == want) {
+                            mContext.addScore(gridValues[x][y2+1]);
                             continue;
+                        }
                     }
                 }
             }
@@ -191,8 +197,10 @@ public class GameGrid {
                         //if cell empty keep moving, if cell match merge and stop
                         gridValues[x][y2] = 0;
                         gridValues[x][y2-1] += current;
-                        if (current == want)
+                        if (current == want) {
+                            mContext.addScore(gridValues[x][y2-1]);
                             continue;
+                        }
                     }
                 }
             }

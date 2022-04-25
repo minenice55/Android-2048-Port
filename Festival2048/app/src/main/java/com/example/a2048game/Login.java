@@ -31,11 +31,14 @@ public class Login extends AppCompatActivity {
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (userName.getText().toString().trim().length() == 0 && passWord.getText().toString().trim().length() == 0) {
+                String usernameInf = userName.getText().toString().trim();
+                String passwordInf = passWord.getText().toString();
+
+                if (usernameInf.length() == 0 && passWord.getText().toString().trim().length() == 0) {
                     Toast.makeText(Login.this, "Please fill in each information to proceed!",Toast.LENGTH_LONG).show();
-                } else if (userName.getText().toString().trim().length() == 0){ //Check if the username matches in firebase (Needs to be added)
+                } else if (usernameInf.length() == 0){ //TODO: Check if the username matches in firebase (Needs to be added)
                     Toast.makeText(Login.this, "The username entered is too long!",Toast.LENGTH_LONG).show();
-                } else if (passWord.getText().toString().trim().length() == 0) {//Check if the password matches the user in firebase (Needs to be added)
+                } else if (passwordInf.length() == 0) { //TODO: Check if the password matches the user in firebase (Needs to be added)
                     Toast.makeText(Login.this, "Please enter a password!", Toast.LENGTH_LONG).show();
                 } else {
                     Intent intent1 = new Intent(Login.this, GameScene.class);

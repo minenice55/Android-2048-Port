@@ -34,19 +34,23 @@ public class Creation extends AppCompatActivity {
 
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";;
 
-
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (username.getText().toString().trim().length() == 0 && email.getText().toString().trim().length() == 0 && password.getText().toString().trim().length() == 0) {
+                String usernameInf = username.getText().toString().trim();
+                String emailInf = email.getText().toString().trim();
+                String passwordInf = password.getText().toString();
+
+                if (usernameInf.length() == 0 && emailInf.length() == 0 && passwordInf.length() == 0) {
                     Toast.makeText(Creation.this, "Please fill in each information to proceed!",Toast.LENGTH_LONG).show();
-                } else if (username.getText().toString().trim().length() > 12){
+                } else if (usernameInf.length() > 12){
                     Toast.makeText(Creation.this, "The Username entered is longer than 12 characters!",Toast.LENGTH_LONG).show();
-                } else if (!email.getText().toString().trim().matches(emailPattern)){
+                } else if (!emailInf.matches(emailPattern)){
                     Toast.makeText(Creation.this, "Please enter a proper email address!",Toast.LENGTH_LONG).show();
-                } else if (password.getText().toString().trim().length() < 6) {
+                } else if (passwordInf.length() < 6) {
                     Toast.makeText(Creation.this, "Please enter a password larger than 6 characters long!", Toast.LENGTH_LONG).show();
                 } else {
+                    // TODO: add the shit to our DB
                     Intent intent1 = new Intent(Creation.this, GameScene.class);
                     startActivity(intent1);
                 }

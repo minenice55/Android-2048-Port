@@ -27,7 +27,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView9"
+                android:id="@+id/usernameDisp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="AWWWWWWW"
@@ -35,7 +35,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <ImageView
-                android:id="@+id/GameAvatarDisp"
+                android:id="@+id/avatarDisp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitCenter"
@@ -58,10 +58,10 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <TextView
-                android:id="@+id/GameScoreDisp"
+                android:id="@+id/scoreDisp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="000000"
+                android:text="0"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
         </LinearLayout>
@@ -81,10 +81,10 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <TextView
-                android:id="@+id/GameBestDisp"
+                android:id="@+id/bestDisp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="000000"
+                android:text="0"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
         </LinearLayout>
@@ -112,6 +112,8 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="32dp"
+            android:background="?android:attr/colorForeground"
+            android:backgroundTint="#25000000"
             android:fadingEdge="horizontal|vertical"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -395,12 +397,12 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/frameLayout"
         android:layout_width="0dp"
-        android:layout_height="164dp"
+        android:layout_height="180dp"
         android:layout_marginStart="2dp"
         android:layout_marginEnd="2dp"
         android:layout_marginBottom="2dp"
         android:background="?attr/colorButtonNormal"
-        android:clickable="true"
+        android:clickable="false"
         android:hapticFeedbackEnabled="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -414,6 +416,7 @@
             android:layout_marginTop="16dp"
             android:text="Festival Time Remaining:"
             android:textAlignment="center"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -429,6 +432,7 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="?android:attr/colorActivatedHighlight"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/fesWinningPlayer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.25"
@@ -442,6 +446,7 @@
             android:text="TextView"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/fesWinningNotice"
             app:layout_constraintStart_toStartOf="@+id/fesWinningNotice" />
@@ -454,6 +459,7 @@
             android:text="TextView"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -466,6 +472,7 @@
             android:layout_marginStart="80dp"
             android:layout_marginBottom="20dp"
             android:scaleType="fitCenter"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@android:drawable/ic_popup_sync"
