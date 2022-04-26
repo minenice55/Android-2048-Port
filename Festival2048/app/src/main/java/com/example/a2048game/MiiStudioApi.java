@@ -9,6 +9,7 @@ import java.util.Locale;
 
 /**
  * @author "minenice" Devrin Aiden Tiongson
+ * Mii2Studio by HEYimHeroic
  */
 public class MiiStudioApi {
     static final String TESTCODE =
