@@ -1,11 +1,13 @@
 package com.example.a2048game;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +15,13 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +30,27 @@ public class Creation extends AppCompatActivity {
     Button btnRegister;
     TextView existing;
     ImageButton info2;
+
+    long lastId = 0;
+
+    FirebaseDatabase database;
+    DatabaseReference ref;
+
+    ArrayList<Player> players;
+
+    String[] testCodes = {
+            "080240030803032c040e0308050409020e040a070001000804000a01001e4004000214031304080f06030b05030a", // Matt
+            "0800390522030504010d0353060400020a0004090007010804000a53005456040002140413010f0d04000a020109", // Elem
+            "04007f030b01070f020c03080a080c02120000030500000f01070f04003a7f08000814031308100b080110080711", // i want die
+            "01007f030d0304120c0b0301050802000f0206050002000804000a01001e00040002140313040702030101040204", // Beef Boss
+            "0800400308040402020C0308060406020A0400000004000804000A0800444004000214031304170D04000A040109", // Guest A
+            "080040030C040402020C0306060406020A0000000005000804000A0600374004000214031304170D04000A040109", // Guest B
+            "0800400308040402020C0301060406020A0100000000000804000A0100214004000214031304170D04000A040109", // Guest C
+            "0800400308030404020C0308060400020A0200000002010804000A0800184004000214031304170D04000A040109", // Guest D
+            "080040030D030404020C0307060400020A0000000006010804000A07000E4004000214031304170D04000A040109", // Guest E
+            "0800400308030404020C0301060400020A0000000007010804000A01000C4004000214031304170D04000A040109"  // Guest F
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +62,33 @@ public class Creation extends AppCompatActivity {
         existing= findViewById(R.id.textViewButton);
         info2 = findViewById(R.id.imageButtonInfo2);
 
+
+        players = new ArrayList<>();
+
+        database = FirebaseDatabase.getInstance("https://festival2048-default-rtdb.firebaseio.com/");
+        ref = database.getReference("users");
+
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";;
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    lastId = (snapshot).getChildrenCount();
+                    players = new ArrayList<>();
+
+                    for (DataSnapshot child: snapshot.getChildren()) {
+                        players.add(child.getValue(Player.class));
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,9 +106,16 @@ public class Creation extends AppCompatActivity {
                 } else if (passwordInf.length() < 6) {
                     Toast.makeText(Creation.this, "Please enter a password larger than 6 characters long!", Toast.LENGTH_LONG).show();
                 } else {
-                    // TODO: add the shit to our DB
-                    Intent intent1 = new Intent(Creation.this, GameScene.class);
-                    startActivity(intent1);
+                    if (addPlayer(Long.toString(lastId), usernameInf, passwordInf, emailInf))
+                    {
+                        Toast.makeText(Creation.this, "Successfully made account! Please log in.", Toast.LENGTH_LONG).show();
+                        Intent intent1 = new Intent(Creation.this, Login.class);
+                        startActivity(intent1);
+                    }
+                    else
+                    {
+                        Toast.makeText(Creation.this, "Another player already uses this username!", Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
@@ -73,6 +136,28 @@ public class Creation extends AppCompatActivity {
         });
 
     }
+
+    public boolean addPlayer(String userId, String username, String password, String email) {
+        if (findMatchingPlayer(username) == null) {
+            Player user = new Player(username, password, email);
+            user.setAvatarCode(testCodes[(int) lastId % testCodes.length]);
+            ref.child(userId).setValue(user);
+            return true;
+        }
+        return false;
+    }
+
+    private Player findMatchingPlayer(String username)
+    {
+        Log.println(Log.DEBUG, "Looking players ", "matching for " + username);
+        Player match = null;
+        for (Player player : players) {
+            if (player.getUsername().equals(username))
+                match = player;
+        }
+        return match;
+    }
+
     private void alertDialog() {
         AlertDialog.Builder dialog=new AlertDialog.Builder(this);
         dialog.setMessage("All you need to do is swipe up, down, right and/or left in order to combine the same numbers. \n\nThe more blocks you combine the higher score you get!!!");

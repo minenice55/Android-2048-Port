@@ -45,6 +45,51 @@ public class GameGrid {
         return gridValues[x][y] == 0;
     }
 
+    public int getCellValue(int x, int y)
+    {
+        if (x >= GRID_SIZE || x < 0 || y >= GRID_SIZE || y < 0)
+            return -1;
+        return gridValues[x][y];
+    }
+
+    public boolean checkMovesPossible()
+    {
+        boolean canMove = false;
+        for (int y = 0; y < GRID_SIZE; y++) {
+            for (int x = 0; x < GRID_SIZE; x++) {
+                int cur = getCellValue(x, y);
+                int up = getCellValue(x, y-1);
+                int down = getCellValue(x, y+1);
+                int left = getCellValue(x-1, y);
+                int right = getCellValue(x+1, y);
+
+                if (cur == up || cur == down || cur == left || cur == right ||
+                    up == 0 || down == 0 || left == 0 || right == 0)
+                {
+                    canMove = true;
+                }
+            }
+        }
+        Log.println(Log.DEBUG, "Full! Move Possible? ", canMove ? "True" : "False");
+        return canMove;
+    }
+
+    public int getNumAvailableCells()
+    {
+        ArrayList<Integer> pos = new ArrayList<>();
+        int i = 0;
+        for (int y = 0; y < GRID_SIZE; y++) {
+            for (int x = 0; x < GRID_SIZE; x++) {
+                if (isCellFree(x, y)) {
+                    Log.println(Log.DEBUG, "Avaialble Cell ", "val " + gridValues[x][y] + " at x " + x + ", y " + y);
+                    pos.add(i);
+                }
+                i++;
+            }
+        }
+        return pos.size();
+    }
+
     public int getRandomAvailableCell()
     {
         ArrayList<Integer> pos = new ArrayList<>();
@@ -72,13 +117,14 @@ public class GameGrid {
                 break;
             }
 
+            success = true;
             int x = idx % GRID_SIZE;
             int y = idx / GRID_SIZE;
             Log.println(Log.DEBUG, "Adding Cell ", "old val " + gridValues[x][y] + " at x " + x + ", y " + y);
             gridValues[x][y] = prng.nextInt(100) < 90 ? 2 : 4;
-            success = true;
         }
         updateGrid();
+        Log.println(Log.DEBUG, "Adding Success? ", success ? "True" : "False");
         return success;
     }
 
@@ -113,8 +159,8 @@ public class GameGrid {
             // 2 -> 3, 1 -> 2 -> 3, 0 -> 1 -> 2 -> 3
             for (int x = GRID_SIZE-2; x >= 0; x--) {
                 for (int x2 = x; x2 < GRID_SIZE - 1; x2++) {
-                    current = gridValues[x2][y];
-                    want = gridValues[x2+1][y];
+                    current = getCellValue(x2, y);
+                    want = getCellValue(x2+1, y);
 
                     if (current != 0 && (want == 0 || current == want))
                     {
@@ -136,8 +182,8 @@ public class GameGrid {
             // 1 -> 0, 2 -> 1 -> 0, 3 -> 2 -> 1 -> 0
             for (int x = 1; x < GRID_SIZE; x++) {
                 for (int x2 = x; x2 > 0; x2--) {
-                    current = gridValues[x2][y];
-                    want = gridValues[x2-1][y];
+                    current = getCellValue(x2, y);
+                    want = getCellValue(x2-1, y);
 
                     if (current != 0 && (want == 0 || current == want))
                     {
@@ -165,8 +211,8 @@ public class GameGrid {
             // 2 -> 3, 1 -> 2 -> 3, 0 -> 1 -> 2 -> 3
             for (int y = GRID_SIZE-2; y >= 0; y--) {
                 for (int y2 = y; y2 < GRID_SIZE - 1; y2++) {
-                    current = gridValues[x][y2];
-                    want = gridValues[x][y2+1];
+                    current = getCellValue(x, y2);
+                    want = getCellValue(x, y2+1);
 
                     if (current != 0 && (want == 0 || current == want))
                     {
@@ -188,8 +234,8 @@ public class GameGrid {
             // 1 -> 0, 2 -> 1 -> 0, 3 -> 2 -> 1 -> 0
             for (int y = 1; y < GRID_SIZE; y++) {
                 for (int y2 = y; y2 > 0; y2--) {
-                    current = gridValues[x][y2];
-                    want = gridValues[x][y2-1];
+                    current = getCellValue(x, y2);
+                    want = getCellValue(x, y2-1);
 
                     if (current != 0 && (want == 0 || current == want))
                     {

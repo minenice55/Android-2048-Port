@@ -8,7 +8,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 public class GameScene extends AppCompatActivity implements
         GestureDetector.OnGestureListener {
@@ -18,7 +22,15 @@ public class GameScene extends AppCompatActivity implements
     static final float SWIPE_THRESHOLD = 1000.0f;
 
     int score;
-    TextView scoreDisp;
+    TextView scoreDisp, usernameDisp, bestDisp;
+    ImageView avatarDisp;
+
+    int pb;
+    String playerId;
+    String msmn;
+    String username;
+
+    MiiStudioApi mii;
 
     protected int[] GridCells = {
             R.id.GameCell00, R.id.GameCell10, R.id.GameCell20, R.id.GameCell30,
@@ -31,11 +43,30 @@ public class GameScene extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_scene);
+
+        pb = getIntent().getIntExtra("playerBest", 0);
+        username = getIntent().getStringExtra("playerName");
+        msmn = getIntent().getStringExtra("playerMii");
+
+        mii = new MiiStudioApi(msmn);
+
         mDetector = new GestureDetectorCompat(this,this);
         grid = new GameGrid(this);
 
         score = 0;
         scoreDisp = findViewById(R.id.scoreDisp);
+        usernameDisp = findViewById(R.id.usernameDisp);
+        bestDisp = findViewById(R.id.bestDisp);
+        avatarDisp = findViewById(R.id.avatarDisp);
+
+        usernameDisp.setText(username);
+        bestDisp.setText(Integer.toString(pb));
+
+        Glide
+            .with(this)
+            .load(mii.getMiiUrl())
+            .centerCrop()
+            .into(avatarDisp);
 
         grid.attemptRandPopulate(2);
 
@@ -85,7 +116,7 @@ public class GameScene extends AppCompatActivity implements
             {
                 Log.println(Log.DEBUG, "Flicked", "Right");
                 if (grid.swipeRows(true))
-                    grid.attemptRandPopulate(1);;
+                    grid.attemptRandPopulate(1);
             }
             else if (vX < -SWIPE_THRESHOLD)
             {
@@ -108,6 +139,17 @@ public class GameScene extends AppCompatActivity implements
                 if (grid.swipeColumns(false))
                     grid.attemptRandPopulate(1);
             }
+        }
+        if (grid.getNumAvailableCells() == 0 && !grid.checkMovesPossible())
+        {
+            // TODO: update player's personal best
+
+            Toast.makeText(GameScene.this, "Game Over! Final Score: " + getScore(), Toast.LENGTH_LONG).show();
+            //game over, go to score scene
+            Intent intent4 = new Intent(GameScene.this, Scores.class);
+            intent4.putExtra("deadScore", getScore());
+            startActivity(intent4);
+
         }
         return false;
     }
