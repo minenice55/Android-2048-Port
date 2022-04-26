@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 public class GameSceneFES extends GameScene {
 
+    // TODO: festival game
+
     TextView fesPeriodNotice, fesWinningNotice, fesWinningPlayer, fesPeriodTime;
     ImageView fesWinningAvatar;
 

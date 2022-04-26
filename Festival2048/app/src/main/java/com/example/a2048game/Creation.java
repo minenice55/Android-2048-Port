@@ -101,8 +101,8 @@ public class Creation extends AppCompatActivity {
 
                 if (usernameInf.length() == 0 && emailInf.length() == 0 && passwordInf.length() == 0) {
                     Toast.makeText(Creation.this, "Please fill in each information to proceed!",Toast.LENGTH_LONG).show();
-                } else if (usernameInf.length() > 12){
-                    Toast.makeText(Creation.this, "The Username entered is longer than 12 characters!",Toast.LENGTH_LONG).show();
+                } else if (usernameInf.length() > 10){
+                    Toast.makeText(Creation.this, "The Username entered is longer than 10 characters!",Toast.LENGTH_LONG).show();
                 } else if (!emailInf.matches(emailPattern)){
                     Toast.makeText(Creation.this, "Please enter a proper email address!",Toast.LENGTH_LONG).show();
                 } else if (passwordInf.length() < 6) {
@@ -157,9 +157,9 @@ public class Creation extends AppCompatActivity {
 
     private void alertDialog() {
         AlertDialog.Builder dialog=new AlertDialog.Builder(this);
-        dialog.setMessage("All you need to do is swipe up, down, right and/or left in order to combine the same numbers. \n\nThe more blocks you combine the higher score you get!!!");
+        dialog.setMessage("Swipe up, down, left or right to combine matching blocks!\nCombine blocks to rack up a high score!");
         dialog.setTitle("How To Play");
-        dialog.setPositiveButton("I Understand",
+        dialog.setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,
                                         int which) {
