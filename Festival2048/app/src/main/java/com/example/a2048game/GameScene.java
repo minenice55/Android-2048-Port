@@ -13,6 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class GameScene extends AppCompatActivity implements
         GestureDetector.OnGestureListener {
@@ -26,11 +31,13 @@ public class GameScene extends AppCompatActivity implements
     ImageView avatarDisp;
 
     int pb;
-    String playerId;
     String msmn;
     String username;
 
     MiiStudioApi mii;
+
+    FirebaseDatabase database;
+    DatabaseReference ref;
 
     protected int[] GridCells = {
             R.id.GameCell00, R.id.GameCell10, R.id.GameCell20, R.id.GameCell30,
@@ -43,6 +50,9 @@ public class GameScene extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_scene);
+
+        database = FirebaseDatabase.getInstance("https://festival2048-default-rtdb.firebaseio.com/");
+        ref = database.getReference("users");
 
         pb = getIntent().getIntExtra("playerBest", 0);
         username = getIntent().getStringExtra("playerName");
@@ -142,12 +152,18 @@ public class GameScene extends AppCompatActivity implements
         }
         if (grid.getNumAvailableCells() == 0 && !grid.checkMovesPossible())
         {
-            // TODO: update player's personal best
+            if (score > pb) {
+                DatabaseReference pRef = ref.child(username);
+                Map<String, Object> pUp = new HashMap<>();
+                pUp.put("highScore", score);
 
-            Toast.makeText(GameScene.this, "Game Over! Final Score: " + getScore(), Toast.LENGTH_LONG).show();
+                pRef.updateChildren(pUp);
+            }
+
             //game over, go to score scene
             Intent intent4 = new Intent(GameScene.this, Scores.class);
             intent4.putExtra("deadScore", getScore());
+            intent4.putExtra("playerName", username);
             startActivity(intent4);
 
         }

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +22,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Login extends AppCompatActivity {
     EditText userName, passWord;
@@ -29,7 +32,7 @@ public class Login extends AppCompatActivity {
     ImageButton info;
 
     long lastId = 0;
-    ArrayList<Player> players;
+    Map<String, Player> players;
 
     FirebaseDatabase database;
     DatabaseReference ref;
@@ -43,7 +46,7 @@ public class Login extends AppCompatActivity {
         createUser = findViewById(R.id.textViewButton2);
         info = findViewById(R.id.imageButtonInfo);
 
-        players = new ArrayList<>();
+        players = new HashMap<>();
 
         database = FirebaseDatabase.getInstance("https://festival2048-default-rtdb.firebaseio.com/");
         ref = database.getReference("users");
@@ -53,9 +56,10 @@ public class Login extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     lastId = (snapshot).getChildrenCount();
-                    players = new ArrayList<>();
+                    players = new HashMap<>();
+
                     for (DataSnapshot child: snapshot.getChildren()) {
-                        players.add(child.getValue(Player.class));
+                        players.put(child.getKey(), child.getValue(Player.class));
                     }
                 }
             }
@@ -111,22 +115,19 @@ public class Login extends AppCompatActivity {
 
     private Player findMatchingPlayer(String username)
     {
-        Player match = null;
-        for (Player player : players) {
-            if (player.getUsername().equals(username))
-                match = player;
-        }
-        return match;
+        Log.println(Log.DEBUG, "Looking players ", "matching for " + username);
+        return players.get(username);
     }
 
     private Player findMatchingPlayer(String username, String password)
     {
-        Player match = null;
-        for (Player player : players) {
-            if (player.getUsername().equals(username) && player.getPasswordHash().equals(password))
-                match = player;
+        if (players.containsKey(username))
+        {
+            Player match = players.get(username);
+            if (match.getUsername().equals(username) && match.getPasswordHash().equals(password))
+                return match;
         }
-        return match;
+        return null;
     }
 
     private void alertDialog() {

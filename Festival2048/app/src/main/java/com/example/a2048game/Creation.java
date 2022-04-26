@@ -22,6 +22,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,7 +38,7 @@ public class Creation extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference ref;
 
-    ArrayList<Player> players;
+    Map<String, Player> players;
 
     String[] testCodes = {
             "080240030803032c040e0308050409020e040a070001000804000a01001e4004000214031304080f06030b05030a", // Matt
@@ -63,7 +65,7 @@ public class Creation extends AppCompatActivity {
         info2 = findViewById(R.id.imageButtonInfo2);
 
 
-        players = new ArrayList<>();
+        players = new HashMap<>();
 
         database = FirebaseDatabase.getInstance("https://festival2048-default-rtdb.firebaseio.com/");
         ref = database.getReference("users");
@@ -75,10 +77,10 @@ public class Creation extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     lastId = (snapshot).getChildrenCount();
-                    players = new ArrayList<>();
+                    players = new HashMap<>();
 
                     for (DataSnapshot child: snapshot.getChildren()) {
-                        players.add(child.getValue(Player.class));
+                        players.put(child.getKey(), child.getValue(Player.class));
                     }
 
                 }
@@ -141,7 +143,7 @@ public class Creation extends AppCompatActivity {
         if (findMatchingPlayer(username) == null) {
             Player user = new Player(username, password, email);
             user.setAvatarCode(testCodes[(int) lastId % testCodes.length]);
-            ref.child(userId).setValue(user);
+            ref.child(username).setValue(user);
             return true;
         }
         return false;
@@ -150,12 +152,7 @@ public class Creation extends AppCompatActivity {
     private Player findMatchingPlayer(String username)
     {
         Log.println(Log.DEBUG, "Looking players ", "matching for " + username);
-        Player match = null;
-        for (Player player : players) {
-            if (player.getUsername().equals(username))
-                match = player;
-        }
-        return match;
+        return players.get(username);
     }
 
     private void alertDialog() {
