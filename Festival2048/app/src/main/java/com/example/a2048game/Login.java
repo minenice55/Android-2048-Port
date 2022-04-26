@@ -82,6 +82,7 @@ public class Login extends AppCompatActivity {
                 else {
                     Player match = findMatchingPlayer(usernameInf, passwordInf);
                     if (match != null) {
+                        // TODO: festival game when appropriate
                         Intent intent1 = new Intent(Login.this, GameScene.class);
                         intent1.putExtra("playerName", match.getUsername());
                         intent1.putExtra("playerMii", match.getAvatarCode());

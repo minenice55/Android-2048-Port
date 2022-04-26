@@ -110,6 +110,7 @@ public class Creation extends AppCompatActivity {
                 } else {
                     if (addPlayer(Long.toString(lastId), usernameInf, passwordInf, emailInf))
                     {
+                        // TODO: send confirmation email when signing up (FireBase has this feature?)
                         Toast.makeText(Creation.this, "Successfully made account! Please log in.", Toast.LENGTH_LONG).show();
                         Intent intent1 = new Intent(Creation.this, Login.class);
                         startActivity(intent1);

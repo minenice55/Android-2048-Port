@@ -22,6 +22,8 @@ import java.util.Map;
 public class GameScene extends AppCompatActivity implements
         GestureDetector.OnGestureListener {
 
+    // TODO: festival game
+
     private GestureDetectorCompat mDetector;
     private GameGrid grid;
     static final float SWIPE_THRESHOLD = 1000.0f;
