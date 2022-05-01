@@ -31,11 +31,6 @@ public class Login extends AppCompatActivity {
     TextView createUser;
     ImageButton info;
 
-    long lastId = 0;
-    Map<String, Player> players;
-
-    FirebaseDatabase database;
-    DatabaseReference ref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,29 +41,8 @@ public class Login extends AppCompatActivity {
         createUser = findViewById(R.id.textViewButton2);
         info = findViewById(R.id.imageButtonInfo);
 
-        players = new HashMap<>();
-
-        database = FirebaseDatabase.getInstance("https://festival2048-default-rtdb.firebaseio.com/");
-        ref = database.getReference("users");
-
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    lastId = (snapshot).getChildrenCount();
-                    players = new HashMap<>();
-
-                    for (DataSnapshot child: snapshot.getChildren()) {
-                        players.put(child.getKey(), child.getValue(Player.class));
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        //preload DB
+        DBHelper.getUsersReference();
 
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +54,7 @@ public class Login extends AppCompatActivity {
                     Toast.makeText(Login.this, "Please fill in each information to proceed!",Toast.LENGTH_LONG).show();
                 }
                 else {
-                    Player match = findMatchingPlayer(usernameInf, passwordInf);
+                    Player match = DBHelper.getInstance().findMatchingPlayer(usernameInf, passwordInf);
                     if (match != null) {
                         // TODO: festival game when appropriate
                         Intent intent1 = new Intent(Login.this, GameScene.class);
@@ -112,23 +86,6 @@ public class Login extends AppCompatActivity {
             }
         });
 
-    }
-
-    private Player findMatchingPlayer(String username)
-    {
-        Log.println(Log.DEBUG, "Looking players ", "matching for " + username);
-        return players.get(username);
-    }
-
-    private Player findMatchingPlayer(String username, String password)
-    {
-        if (players.containsKey(username))
-        {
-            Player match = players.get(username);
-            if (match.getUsername().equals(username) && match.getPasswordHash().equals(password))
-                return match;
-        }
-        return null;
     }
 
     private void alertDialog() {

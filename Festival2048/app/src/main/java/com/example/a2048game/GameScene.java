@@ -38,9 +38,6 @@ public class GameScene extends AppCompatActivity implements
 
     MiiStudioApi mii;
 
-    FirebaseDatabase database;
-    DatabaseReference ref;
-
     protected int[] GridCells = {
             R.id.GameCell00, R.id.GameCell10, R.id.GameCell20, R.id.GameCell30,
             R.id.GameCell01, R.id.GameCell11, R.id.GameCell21, R.id.GameCell31,
@@ -52,9 +49,6 @@ public class GameScene extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_scene);
-
-        database = FirebaseDatabase.getInstance("https://festival2048-default-rtdb.firebaseio.com/");
-        ref = database.getReference("users");
 
         pb = getIntent().getIntExtra("playerBest", 0);
         username = getIntent().getStringExtra("playerName");
@@ -155,7 +149,7 @@ public class GameScene extends AppCompatActivity implements
         if (grid.getNumAvailableCells() == 0 && !grid.checkMovesPossible())
         {
             if (score > pb) {
-                DatabaseReference pRef = ref.child(username);
+                DatabaseReference pRef = DBHelper.getUsersReference().child(username);
                 Map<String, Object> pUp = new HashMap<>();
                 pUp.put("highScore", score);
 

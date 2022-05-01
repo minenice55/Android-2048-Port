@@ -40,18 +40,6 @@ public class Creation extends AppCompatActivity {
 
     Map<String, Player> players;
 
-    String[] testCodes = {
-            "080240030803032c040e0308050409020e040a070001000804000a01001e4004000214031304080f06030b05030a", // Matt
-            "0800390522030504010d0353060400020a0004090007010804000a53005456040002140413010f0d04000a020109", // Elem
-            "04007f030b01070f020c03080a080c02120000030500000f01070f04003a7f08000814031308100b080110080711", // i want die
-            "01007f030d0304120c0b0301050802000f0206050002000804000a01001e00040002140313040702030101040204", // Beef Boss
-            "0800400308040402020C0308060406020A0400000004000804000A0800444004000214031304170D04000A040109", // Guest A
-            "080040030C040402020C0306060406020A0000000005000804000A0600374004000214031304170D04000A040109", // Guest B
-            "0800400308040402020C0301060406020A0100000000000804000A0100214004000214031304170D04000A040109", // Guest C
-            "0800400308030404020C0308060400020A0200000002010804000A0800184004000214031304170D04000A040109", // Guest D
-            "080040030D030404020C0307060400020A0000000006010804000A07000E4004000214031304170D04000A040109", // Guest E
-            "0800400308030404020C0301060400020A0000000007010804000A01000C4004000214031304170D04000A040109"  // Guest F
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +96,7 @@ public class Creation extends AppCompatActivity {
                 } else if (passwordInf.length() < 6) {
                     Toast.makeText(Creation.this, "Please enter a password larger than 6 characters long!", Toast.LENGTH_LONG).show();
                 } else {
-                    if (addPlayer(Long.toString(lastId), usernameInf, passwordInf, emailInf))
+                    if (DBHelper.addPlayer(Long.toString(lastId), usernameInf, passwordInf, emailInf))
                     {
                         // TODO: send confirmation email when signing up (FireBase has this feature?)
                         Toast.makeText(Creation.this, "Successfully made account! Please log in.", Toast.LENGTH_LONG).show();
@@ -138,22 +126,6 @@ public class Creation extends AppCompatActivity {
             }
         });
 
-    }
-
-    public boolean addPlayer(String userId, String username, String password, String email) {
-        if (findMatchingPlayer(username) == null) {
-            Player user = new Player(username, password, email);
-            user.setAvatarCode(testCodes[(int) lastId % testCodes.length]);
-            ref.child(username).setValue(user);
-            return true;
-        }
-        return false;
-    }
-
-    private Player findMatchingPlayer(String username)
-    {
-        Log.println(Log.DEBUG, "Looking players ", "matching for " + username);
-        return players.get(username);
     }
 
     private void alertDialog() {

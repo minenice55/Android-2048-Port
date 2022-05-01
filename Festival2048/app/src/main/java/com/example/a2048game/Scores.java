@@ -1,9 +1,13 @@
 package com.example.a2048game;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,19 +21,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Scores extends AppCompatActivity {
     Button btnPlay2;
     TextView deadScoreDisp;
 
-    Map<String, Player> players;
-
-    FirebaseDatabase database;
-    DatabaseReference ref;
     String username;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,33 +45,10 @@ public class Scores extends AppCompatActivity {
 
         deadScoreDisp.setText("Final Score: " + Integer.toString(getIntent().getIntExtra("deadScore", 0)));
 
-        database = FirebaseDatabase.getInstance("https://festival2048-default-rtdb.firebaseio.com/");
-        ref = database.getReference("users");
-
-        // TODO: list out all scores in our highScoreDisp RecyclerView
-
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    players = new HashMap<>();
-
-                    for (DataSnapshot child: snapshot.getChildren()) {
-                        players.put(child.getKey(), child.getValue(Player.class));
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
         btnPlay2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Player match = findMatchingPlayer(username);
+                Player match = DBHelper.getInstance().findMatchingPlayer(username);
                 if (match != null) {
                     Intent intent5 = new Intent(Scores.this, GameScene.class);
                     intent5.putExtra("playerName", match.getUsername());
@@ -82,11 +63,14 @@ public class Scores extends AppCompatActivity {
                 }
             }
         });
-    }
 
-    private Player findMatchingPlayer(String username)
-    {
-        Log.println(Log.DEBUG, "Looking players ", "matching for " + username);
-        return players.get(username);
+        RecyclerView scoreDisp = findViewById(R.id.highScoreDisp);
+        ArrayList<Player> players = new ArrayList<>(DBHelper.getPlayers().values().stream().sorted(
+                                        Comparator.comparingInt(Player::getHighScore).reversed()
+                                    ).collect(Collectors.toList()));
+
+        ScoreAdapter adapt = new ScoreAdapter(players, this);
+        scoreDisp.setAdapter(adapt);
+        scoreDisp.setLayoutManager(new LinearLayoutManager(this));
     }
 }
