@@ -1,13 +1,16 @@
 package com.example.a2048game;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GestureDetectorCompat;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,8 +19,12 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class GameScene extends AppCompatActivity implements
         GestureDetector.OnGestureListener {
@@ -32,6 +39,9 @@ public class GameScene extends AppCompatActivity implements
     TextView scoreDisp, usernameDisp, bestDisp;
     ImageView avatarDisp;
 
+    TextView fesWinningNotice, fesWinningPlayer;
+    ImageView fesWinningAvatar;
+
     int pb;
     String msmn;
     String username;
@@ -45,6 +55,7 @@ public class GameScene extends AppCompatActivity implements
             R.id.GameCell03, R.id.GameCell13, R.id.GameCell23, R.id.GameCell33,
     };
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,8 +87,28 @@ public class GameScene extends AppCompatActivity implements
 
         grid.attemptRandPopulate(2);
 
-//        Intent intent4 = new Intent(GameScene.this, Scores.class);
-//        startActivity(intent4);
+        // set msg showing current best player (this doesn't update in real time)
+        Optional<Player> topPlayer = DBHelper.getPlayers().values().stream().max(
+                Comparator.comparingInt(Player::getHighScore));
+        if (topPlayer.isPresent() && !topPlayer.get().getUsername().equals(username))
+        {
+            fesWinningNotice = findViewById(R.id.fesWinningNotice);
+            fesWinningPlayer = findViewById(R.id.fesWinningPlayer);
+            fesWinningAvatar = findViewById(R.id.fesWinningAvatar);
+
+            fesWinningNotice.setVisibility(View.VISIBLE);
+            fesWinningPlayer.setVisibility(View.VISIBLE);
+            fesWinningAvatar.setVisibility(View.VISIBLE);
+
+            fesWinningNotice.setText("Beat " + topPlayer.get().getUsername() + "!");
+            fesWinningPlayer.setText(Integer.toString(topPlayer.get().getHighScore()));
+            MiiStudioApi winningMii = new MiiStudioApi(topPlayer.get().getAvatarCode());
+            Glide
+                .with(this)
+                .load(winningMii.getMiiUrl())
+                .centerCrop()
+                .into(fesWinningAvatar);
+        }
     }
 
     @Override
